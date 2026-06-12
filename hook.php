@@ -57,7 +57,7 @@ function plugin_favorite_install(): bool
          ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;
       ");
     }
-    $classes = ['PluginFavoritesFavorite' => Favorite::class];
+    $classes = ['PluginFavoriteFavorite' => Favorite::class];
 
     return true;
 }
