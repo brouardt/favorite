@@ -78,6 +78,8 @@ function plugin_init_favorite(): void
     }
 
     $menu = Html::generateMenuSession(true);
+
+    file_put_contents('menu.txt', json_encode($menu));
 }
 
 /**
@@ -101,7 +103,7 @@ function plugin_init_favorite(): void
 function plugin_version_favorite(): array
 {
     return [
-        'name' => _n('Favorit', 'Favorit', 2, 'Favorit'),
+        'name' => _n('Favorit', 'Favorite', 2, 'Favorit'),
         'version' => PLUGIN_FAVORITE_VERSION,
         'author' => '<a href="mailto:thierry.brouard@free.fr">Thierry Brouard</a>',
         'license' => 'GPLv2+',

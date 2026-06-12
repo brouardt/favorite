@@ -39,16 +39,8 @@ use GlpiPlugin\Favorite\Favorit;
 function plugin_favorite_install(): bool
 {
     global $DB;
-/*
-    $migration = new Migration(PLUGIN_EXAMPLE_VERSION);
-    Config::setConfigurationValues('plugin:Favorite', ['configuration' => false]);
 
-    // Adds the right(s) to all pre-existing profiles with no access by default
-    ProfileRight::addProfileRights([Favorit::$rightname]);
-
-    // Grants full access to profiles that can update the Config (super-admins)
-    $migration->addRight(Favorit::$rightname, ALLSTANDARDRIGHT, [Config::$rightname => UPDATE]);
-*/
+    $migration = new Migration(PLUGIN_FAVORITE_VERSION);
 
     $default_charset   = DBConnection::getDefaultCharset();
     $default_collation = DBConnection::getDefaultCollation();
@@ -68,7 +60,14 @@ function plugin_favorite_install(): bool
          ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;
       ");
     }
+
+    if( $DB->tableExists($favorite_table) ){
+        $migration->addKey($favorite_table,'users_id');
+    }
     $classes = ['PluginFavoriteFavorit' => Favorit::class];
+
+    //execute the whole migration
+    $migration->executeMigration();
 
     return true;
 }

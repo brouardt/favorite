@@ -10,9 +10,9 @@ class Favorit extends \CommonDBTM
 {
     public static $rightname = 'plugin_favorite';
 
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
-        return _n('Favorit', 'Favorites', $nb, 'favorites');
+        return _n('Favorit', 'Favorites', $nb, 'Favorit');
     }
 
     public static function getMenuName()
@@ -22,7 +22,7 @@ class Favorit extends \CommonDBTM
     /**
      * @return string
      */
-    static function getIcon()
+    public static function getIcon()
     {
         return "ti ti-heart";
     }
