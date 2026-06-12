@@ -59,12 +59,6 @@ function plugin_favorite_install(): bool
     }
     $classes = ['PluginFavoritesFavorite' => Favorite::class];
 
-    /*
-     * Profiles
-     */
-    Profile::initProfile();
-    Profile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
-
     return true;
 }
 
