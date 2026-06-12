@@ -99,7 +99,7 @@ function plugin_init_favorites(): void
 function plugin_version_favorites(): array
 {
     return [
-        'name'           => 'FAVORITES',
+        'name'           => 'Favorites',
         'version'        => PLUGIN_FAVORITES_VERSION,
         'author'         => '<a href="mailto:thierry.brouard@free.fr">Thierry Brouard</a>',
         'license'        => 'GPLv2+',
