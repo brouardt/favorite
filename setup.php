@@ -34,13 +34,13 @@
 use Glpi\Http;
 use Glpi\Plugin\Hooks;
 
-define('PLUGIN_FAVORITES_VERSION', '1.0.0');
+define('PLUGIN_FAVORITE_VERSION', '1.0.0');
 
 // Minimal GLPI version, inclusive
-define("PLUGIN_FAVORITES_MIN_GLPI_VERSION", "11.0.0");
+define("PLUGIN_FAVORITE_MIN_GLPI_VERSION", "11.0.0");
 
 // Maximum GLPI version, exclusive
-define("PLUGIN_FAVORITES_MAX_GLPI_VERSION", "11.0.99");
+define("PLUGIN_FAVORITE_MAX_GLPI_VERSION", "11.0.99");
 
 /**
  * Init hooks of the plugin.
@@ -53,25 +53,25 @@ function plugin_init_favorites(): void
 
     $plugin = new Plugin();
     if (
-        $plugin->isInstalled('favorites')
-        && $plugin->isActivated('favorites')
+        $plugin->isInstalled('favorite')
+        && $plugin->isActivated('favorite')
     ) {
-        Plugin::registerClass('PluginFavoritesProfile', ['addtabon' => 'Profile']);
+        Plugin::registerClass('PluginFavoriteProfile', ['addtabon' => 'Profile']);
 
         // Add specific files to add to the header : javascript or css
-        $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['favorites'] = 'favorites.js';
-        $PLUGIN_HOOKS[Hooks::ADD_CSS]['favorites']        = 'favorites.css';
+        $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['favorite'] = 'favorite.js';
+        $PLUGIN_HOOKS[Hooks::ADD_CSS]['favorite']        = 'favorite.css';
 
         // Display a menu entry ?
         Plugin::registerClass(Profile::class, ['addtabon' => ['Profile']]);
         if (Favorite::canView()) { // Right set in change_profile hook
-            $PLUGIN_HOOKS[Hooks::MENU_TOADD]['favorites'] = [
+            $PLUGIN_HOOKS[Hooks::MENU_TOADD]['favorite'] = [
                 'plugins' => Favorite::class,
                 'tools'   => Favorite::class
             ];
 
-            $PLUGIN_HOOKS[Hooks::HELPDESK_MENU_ENTRY]['favorites']      = true;
-            $PLUGIN_HOOKS[Hooks::HELPDESK_MENU_ENTRY_ICON]['favorites'] = 'ti ti-heart';
+            $PLUGIN_HOOKS[Hooks::HELPDESK_MENU_ENTRY]['favorite']      = true;
+            $PLUGIN_HOOKS[Hooks::HELPDESK_MENU_ENTRY_ICON]['favorite'] = 'ti ti-heart';
         }
     }
 
@@ -99,15 +99,15 @@ function plugin_init_favorites(): void
 function plugin_version_favorites(): array
 {
     return [
-        'name'           => 'Favorites',
-        'version'        => PLUGIN_FAVORITES_VERSION,
+        'name'           => _n('Favori', 'Favoris', 2, 'Favoris'),
+        'version'        => PLUGIN_FAVORITE_VERSION,
         'author'         => '<a href="mailto:thierry.brouard@free.fr">Thierry Brouard</a>',
         'license'        => 'GPLv2+',
-        'homepage'       => 'https://github.com/brouardt/glpi-plugin-favorites',
+        'homepage'       => 'https://github.com/brouardt/glpi-plugin-favorite',
         'requirements'   => [
             'glpi' => [
-                'min' => PLUGIN_FAVORITES_MIN_GLPI_VERSION,
-                'max' => PLUGIN_FAVORITES_MAX_GLPI_VERSION,
+                'min' => PLUGIN_FAVORITE_MIN_GLPI_VERSION,
+                'max' => PLUGIN_FAVORITE_MAX_GLPI_VERSION,
             ],
         ],
     ];

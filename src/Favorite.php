@@ -1,6 +1,6 @@
 <?php
 
-namespace GlpiPlugin\Favorites;
+namespace GlpiPlugin\Favorite;
 
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access directly to this file");
@@ -8,7 +8,7 @@ if (!defined('GLPI_ROOT')) {
 
 class Favorite extends \CommonDBTM
 {
-    public static $rightname = 'plugin_favorites';
+    public static $rightname = 'plugin_favorite';
 
     static function getTypeName($nb = 0)
     {

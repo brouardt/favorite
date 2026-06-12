@@ -31,12 +31,12 @@
  * -------------------------------------------------------------------------
  */
 
-use GlpiPlugin\Favorites\Favorite;
+use GlpiPlugin\Favorite\Favorite;
 
 /**
  * Plugin install process
  */
-function plugin_favorites_install(): bool
+function plugin_favorite_install(): bool
 {
     global $DB;
 
@@ -71,7 +71,7 @@ function plugin_favorites_install(): bool
 /**
  * Plugin uninstall process
  */
-function plugin_favorites_uninstall(): bool
+function plugin_favorite_uninstall(): bool
 {
     /** @var DBmysql $DB */
     global $DB;
