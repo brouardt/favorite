@@ -31,7 +31,7 @@
  * -------------------------------------------------------------------------
  */
 
-use GlpiPlugin\Favorite\Favorite;
+use GlpiPlugin\Favorite\Favorit;
 
 /**
  * Plugin install process
@@ -39,6 +39,15 @@ use GlpiPlugin\Favorite\Favorite;
 function plugin_favorite_install(): bool
 {
     global $DB;
+
+    $migration = new Migration(PLUGIN_EXAMPLE_VERSION);
+    Config::setConfigurationValues('plugin:Favorite', ['configuration' => false]);
+
+    // Adds the right(s) to all pre-existing profiles with no access by default
+    ProfileRight::addProfileRights([Favorit::$rightname]);
+
+    // Grants full access to profiles that can update the Config (super-admins)
+    $migration->addRight(Favorit::$rightname, ALLSTANDARDRIGHT, [Config::$rightname => UPDATE]);
 
     $default_charset   = DBConnection::getDefaultCharset();
     $default_collation = DBConnection::getDefaultCollation();
@@ -57,7 +66,7 @@ function plugin_favorite_install(): bool
          ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;
       ");
     }
-    $classes = ['PluginFavoriteFavorite' => Favorite::class];
+    $classes = ['PluginFavoriteFavorit' => Favorit::class];
 
     return true;
 }
@@ -77,7 +86,7 @@ function plugin_favorite_uninstall(): bool
     $favorite_table = 'glpi_plugin_favorite';
 
     $DB->doQuery("DROP TABLE IF EXISTS `$favorite_table`;");
-    ProfileRight::deleteProfileRights([Favorite::$rightname]);
+    ProfileRight::deleteProfileRights([Favorit::$rightname]);
 
     return true;
 }

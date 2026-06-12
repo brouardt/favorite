@@ -31,8 +31,8 @@
  * -------------------------------------------------------------------------
  */
 
-use Glpi\Http;
 use Glpi\Plugin\Hooks;
+use GlpiPlugin\Favorite\Favorit;
 
 define('PLUGIN_FAVORITE_VERSION', '1.0.0');
 
@@ -52,7 +52,10 @@ function plugin_init_favorite(): void
     global $PLUGIN_HOOKS;
 
     $plugin = new Plugin();
-    if ($plugin->isInstalled('favorite') && $plugin->isActivated('favorite')) {
+    if (
+        $plugin->isInstalled('favorite')
+        && $plugin->isActivated('favorite')
+    ) {
         Plugin::registerClass('PluginFavoriteProfile', ['addtabon' => 'Profile']);
 
         // Add specific files to add to the header : javascript or css
@@ -61,10 +64,10 @@ function plugin_init_favorite(): void
 
         // Display a menu entry ?
         Plugin::registerClass(Profile::class, ['addtabon' => ['Profile']]);
-        if (Favorite::canView()) { // Right set in change_profile hook
+        if (Favorit::canView()) { // Right set in change_profile hook
             $PLUGIN_HOOKS[Hooks::MENU_TOADD]['favorite'] = [
-                'plugins' => Favorite::class,
-                'tools' => Favorite::class
+                'plugins' => Favorit::class,
+                'tools' => Favorit::class
             ];
 
             $PLUGIN_HOOKS[Hooks::ASSIGN_TO_TICKET]['favorite'] = false;
@@ -74,7 +77,7 @@ function plugin_init_favorite(): void
         }
     }
 
-    $menu = Http::generateMenuSession(true);
+    $menu = Html::generateMenuSession(true);
 }
 
 /**
@@ -98,7 +101,7 @@ function plugin_init_favorite(): void
 function plugin_version_favorite(): array
 {
     return [
-        'name' => _n('Favorit', 'Favorite', 2, 'Favorite'),
+        'name' => _n('Favorit', 'Favorit', 2, 'Favorit'),
         'version' => PLUGIN_FAVORITE_VERSION,
         'author' => '<a href="mailto:thierry.brouard@free.fr">Thierry Brouard</a>',
         'license' => 'GPLv2+',

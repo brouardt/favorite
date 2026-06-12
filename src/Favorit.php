@@ -6,13 +6,13 @@ if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access directly to this file");
 }
 
-class Favorite extends \CommonDBTM
+class Favorit extends \CommonDBTM
 {
     public static $rightname = 'plugin_favorite';
 
     static function getTypeName($nb = 0)
     {
-        return _n('Favorite', 'Favorites', $nb, 'favorites');
+        return _n('Favorit', 'Favorites', $nb, 'favorites');
     }
 
     /**
