@@ -33,6 +33,7 @@ namespace GlpiPlugin\Favorites;
 use CommonDBTM;
 use CommonGLPI;
 use Glpi\Application\View\TemplateRenderer;
+use Symfony\Bundle\FrameworkBundle\Command\ConfigDumpReferenceCommand;
 use Toolbox;
 
 
@@ -44,6 +45,7 @@ class Preference extends CommonDBTM
     {
         return 'users_id';
     }
+
     public static function getTypeName($nb = 0)
     {
         return __s('Favorites', PLUGIN_FAVORITES);
@@ -56,16 +58,16 @@ class Preference extends CommonDBTM
 
     public static function showPreferences()
     {
-        echo "<div class='center'>";
+        $preference = new Preference();
+        $preference->getFromDB($_SESSION['glpiID']);
 
         $twig = TemplateRenderer::getInstance();
         $twig->display('@favorites/preference.html.twig', [
             'form_id' => 'plugin_favorite_user',
             'action' => Toolbox::getItemTypeFormURL(self::class),
-            'item_id' => '1'
+            'id'=> $preference->getField('id'),
+            'types' => json_decode($preference->getField('types'))
         ]);
-
-        echo '</div>';
     }
 
 
@@ -105,11 +107,11 @@ class Preference extends CommonDBTM
         $preference = new Preference();
         $preference->getFromDB($_SESSION['glpiID']);
 
-        $type = $preference->getField('types');
+        $types = $preference->getField('types');
 
         $list = [];
-        if ($type) {
-            $array = json_decode($type);
+        if ($types) {
+            $array = json_decode($types);
             foreach ($array as $item) {
                 if (method_exists($item, 'getMenuContent')) {
                     $list[$item] = $item::getMenuContent();
