@@ -31,7 +31,7 @@
 use Glpi\Plugin\Hooks;
 use GlpiPlugin\Favorites\Favorite;
 use GlpiPlugin\Favorites\Profile;
-use GlpiPlugin\Favorites\Config;
+use GlpiPlugin\Favorites\Preference;
 
 define('PLUGIN_FAVORITES', 'favorites');
 define('PLUGIN_FAVORITES_CONFIG', 'plugin:favorites');
@@ -48,22 +48,20 @@ function plugin_init_favorites(): void
     /** @var array<string, array<string, mixed>> $PLUGIN_HOOKS */
     global $PLUGIN_HOOKS;
 
-    $PLUGIN_HOOKS[Hooks::ASSIGN_TO_TICKET][PLUGIN_FAVORITES] = false;
-    $PLUGIN_HOOKS[Hooks::HELPDESK_MENU_ENTRY][PLUGIN_FAVORITES] = false;
-    $PLUGIN_HOOKS[Hooks::CHANGE_PROFILE][PLUGIN_FAVORITES] = [Profile::class, 'initProfile'];
-
-    Plugin::registerClass(Profile::class, ['addtabon' => 'Profile']);
 
     $plugin = new Plugin();
     if (Session::getLoginUserID() && $plugin->isActivated(PLUGIN_FAVORITES)) {
 
         if (Session::haveRight(PLUGIN_FAVORITES_RIGHTS, READ)) {
+            Plugin::registerClass(Profile::class, ['addtabon' => 'Profile']);
+            Plugin::registerClass(Preference::class, ['addtabon' => 'Preference']);
+        }
+
+        if (Session::haveRight(PLUGIN_FAVORITES_RIGHTS, READ)) {
+            $PLUGIN_HOOKS[Hooks::CHANGE_PROFILE][PLUGIN_FAVORITES] = [Profile::class, 'initProfile'];
             $PLUGIN_HOOKS[Hooks::REDEFINE_MENUS][PLUGIN_FAVORITES] = [Favorite::class, 'redefineMenus'];
             $PLUGIN_HOOKS[Hooks::AUTO_GET_DROPDOWN][PLUGIN_FAVORITES] = [Favorite::class, 'getDropdown'];
         }
-
-        // Display a config entry
-        $PLUGIN_HOOKS[Hooks::CONFIG_PAGE][PLUGIN_FAVORITES] = 'front/favorite.php';
     }
 }
 

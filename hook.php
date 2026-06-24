@@ -28,8 +28,8 @@
  * -------------------------------------------------------------------------
  */
 
-use GlpiPlugin\Favorites\Favorite;
 use GlpiPlugin\Favorites\Profile;
+use GlpiPlugin\Favorites\Preference;
 
 /**
  * Plugin install process
@@ -42,29 +42,22 @@ function plugin_favorites_install(): bool
 
     Config::setConfigurationValues(PLUGIN_FAVORITES_CONFIG, ['version' => PLUGIN_FAVORITES_VERSION]);
 
-    Plugin::registerClass(Profile::class, ['addtabon' => Profile::class]);
-
     $default_charset = DBConnection::getDefaultCharset();
     $default_collation = DBConnection::getDefaultCollation();
     $default_key_sign = DBConnection::getDefaultPrimaryKeySignOption();
 
-    $favorite_table = Favorite::getTable();
-
-    if (!$DB->tableExists($favorite_table)) {
-        $DB->doQuery("CREATE TABLE IF NOT EXISTS `$favorite_table` (
+    $preference_table = Preference::getTable();
+    if (!$DB->tableExists($preference_table)) {
+        $DB->doQuery("CREATE TABLE IF NOT EXISTS `$preference_table` (
          `id` INT $default_key_sign NOT NULL AUTO_INCREMENT,
-         `user_id` INT $default_key_sign NOT NULL,
-         `order` SMALLINT NOT NULL DEFAULT '0',
-         `type` VARCHAR(32) NOT NULL,
+         `users_id` INT $default_key_sign NOT NULL,
+         `types` TEXT,
          PRIMARY KEY (`id`), 
-         KEY `user_id` (`user_id`)
+         UNIQUE KEY `users_id` (`users_id`)
          ) ENGINE=InnoDB DEFAULT CHARSET=$default_charset COLLATE=$default_collation ROW_FORMAT=DYNAMIC;");
         // insert example
-        $DB->doQuery("INSERT INTO `$favorite_table` (`user_id`, `order`, `type`) 
-        VALUES 
-        ({$_SESSION['glpiID']}, 1, 'Computer'),
-        ({$_SESSION['glpiID']}, 2, 'User'),
-        ({$_SESSION['glpiID']}, 3, 'Ticket');");
+        $DB->doQuery("INSERT INTO `$preference_table` (`users_id`, `types`) 
+        VALUES ({$_SESSION['glpiID']}, '" . json_encode(['Computer', 'User', 'Ticket']) . "');");
     }
     //execute the whole migration
     $migration->executeMigration();
@@ -91,8 +84,8 @@ function plugin_favorites_uninstall(): bool
         ProfileRight::deleteProfileRights([$right['field']]);
     }
 
-    $favorite_table = Favorite::getTable();
-    $DB->doQuery("DROP TABLE IF EXISTS `$favorite_table`;");
+    $preference_table = Preference::getTable();
+    $DB->doQuery("DROP TABLE IF EXISTS `$preference_table`;");
 
     return true;
 }

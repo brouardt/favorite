@@ -12,8 +12,8 @@ Ce plugin vous permet de gérer les favoris des menus les plus utilisés. Très 
 Pour installer, rendez-vous dans votre dossier plugins et tapez 
 ``git clone https://github.com/brouardt/glpi-plugin-favorite.git favorite`` [entrer]
 
-#### Évolution attendue
-Cette première version n'est pas complètement intégraté à GLPI. L'ajout et le retrait devraient etre plus simple.
+#### Configuration
+Pour ajouter ou supprimer des menus en favoris il vous suffit de vous rendre dans vos préférences dans l'onglet Favoris
 
 ### English
 
@@ -25,5 +25,5 @@ This plugin lets you manage favorite for your most frequently used menus. Very u
 To install, reach your plugins folder et write
 ``git clone https://github.com/brouardt/glpi-plugin-favorite.git favorite`` [enter]
 
-#### Expected trend
-This initial version is not fully integrated into GLPI. Adding and removing items should be simpler.
+#### Configuration
+To add or remove menus from your favorites, simply go to your preferences and select the Favorites tab.

@@ -38,7 +38,7 @@ use Session;
 
 class Profile extends \Profile
 {
-    public static $rightname = 'profile';
+    public static $rightname = 'plugin_favorites';
 
     /**
      * @param CommonGLPI $item
@@ -49,8 +49,9 @@ class Profile extends \Profile
     public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
         if ($item->getType() == 'Profile') {
-            return self::createTabEntry(__s('Favorite', PLUGIN_FAVORITES));
+            return self::createTabEntry(__s('Favorites', PLUGIN_FAVORITES));
         }
+
         return '';
     }
 
@@ -59,7 +60,7 @@ class Profile extends \Profile
      */
     public static function getIcon()
     {
-        return Favorite::getIcon();
+        return 'ti ti-heart';
     }
 
     /**
@@ -98,28 +99,12 @@ class Profile extends \Profile
     {
         return [
             [
-                'itemtype' => Favorite::class,
-                'label' => Favorite::getTypeName(),
-                'field' => Favorite::$rightname,
-                'rights' => \Profile::getRightsFor(Favorite::class)
+                'itemtype' => Preference::class,
+                'label' => __s('Favorites', PLUGIN_FAVORITES),
+                'field' => PLUGIN_FAVORITES_RIGHTS,
+                'rights' => \Profile::getRightsFor(Preference::class)
             ]
         ];
-    }
-
-    /**
-     * @param $profiles_id
-     * @return void
-     */
-    static function showForProfile($profiles_id = 0)
-    {
-        $profile = new Profile();
-        $profile->getFromDB($profiles_id);
-
-        TemplateRenderer::getInstance()->display('@favorites/profile.html.twig', [
-            'can_edit' => self::canUpdate(),
-            'profile' => $profile,
-            'rights' => self::getAllRights()
-        ]);
     }
 
     /**
@@ -127,11 +112,7 @@ class Profile extends \Profile
      */
     public static function createFirstAccess($profile_id)
     {
-        self::addDefaultProfileInfos(
-            $profile_id,
-            [Favorite::$rightname => ALLSTANDARDRIGHT],
-            true
-        );
+        self::addDefaultProfileInfos($profile_id, [PLUGIN_FAVORITES_RIGHTS => ALLSTANDARDRIGHT], true);
     }
 
     /**
@@ -175,8 +156,10 @@ class Profile extends \Profile
     public static function initProfile()
     {
         global $DB;
+
         $profile = new self();
         $dbu = new DbUtils();
+
         //Add new rights in glpi_profilerights table
         foreach ($profile->getAllRights() as $data) {
             if ($dbu->countElementsInTable(
@@ -191,7 +174,7 @@ class Profile extends \Profile
             'FROM' => 'glpi_profilerights',
             'WHERE' => [
                 'profiles_id' => $_SESSION['glpiactiveprofile']['id'],
-                'name' => ['LIKE', '%' . Favorite::$rightname . '%'],
+                'name' => ['LIKE', '%' . PLUGIN_FAVORITES_RIGHTS . '%'],
             ],
         ]);
         foreach ($it as $prof) {

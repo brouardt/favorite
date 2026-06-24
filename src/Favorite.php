@@ -32,6 +32,8 @@ namespace GlpiPlugin\Favorites;
 
 use CommonDBTM;
 use Html;
+use Location;
+use phpDocumentor\Reflection\Type;
 
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access directly to this file");
@@ -39,7 +41,7 @@ if (!defined('GLPI_ROOT')) {
 
 class Favorite extends CommonDBTM
 {
-    public static $rightname = PLUGIN_FAVORITES_RIGHTS;
+    public static $rightname = 'plugin_favorites';
 
     /**
      * @param $nb
@@ -59,24 +61,6 @@ class Favorite extends CommonDBTM
     }
 
     /**
-     * @return array|array[]|true[]
-     */
-    public static function getMenuContent()
-    {
-        return [
-            'title' => __('Settings'),
-            'links' => [
-                'search' => self::getSearchURL(false),
-                'lists' => '',
-                'add' => '/plugins/favorites/front/favorites.php?mode=add',
-            ],
-            'icon' => 'ti ti-settings',
-            'page' => '/plugins/favorites/front/favorites.php',
-            'default' => '/plugins/favorites/front/favorites.php',
-        ];
-    }
-
-    /**
      * @return string
      */
     public static function getIcon()
@@ -84,37 +68,6 @@ class Favorite extends CommonDBTM
         return "ti ti-heart";
     }
 
-    /**
-     * @return array
-     */
-    public static function getFavoriteList()
-    {
-        global $DB;
-
-        $columns = ['id', 'user_id', 'order', 'type'];
-
-        $favorite = new Favorite();
-        $favorite->getFromDB($_SESSION['glpiID']);
-
-        $criteria = [
-            'SELECT' => $columns,
-            'FROM' => 'glpi_plugin_favorites_favorites',
-            'WHERE' => ['user_id' => $_SESSION['glpiID']],
-            'ORDERBY' => 'order ASC',
-        ];
-        $iterator = $DB->request($criteria);
-
-        $list = [];
-        if (count($iterator) > 0) {
-            foreach ($iterator as $data) {
-                if (method_exists($data['type'], 'getMenuContent')) {
-                    $list[$data['type']] = $data['type']::getMenuContent();
-                }
-            }
-        }
-
-        return $list;
-    }
 
     /**
      * @param $menus
@@ -123,20 +76,20 @@ class Favorite extends CommonDBTM
     public static function redefineMenus($menus)
     {
         if (self::canView()) {
-            $collection = self::getFavoriteList();
+            $collection = Preference::getFavoritesTypes();
 
-            $types = ['Settings'] + array_keys($collection);
             $favorites_menu = [PLUGIN_FAVORITES =>
                 [
                     'title' => self::getMenuName(),
-                    'types' => [$types],
+                    'types' => array_keys($collection),
                     'links' => [
-                        'search' => self::getSearchURL(false),
+                        'search' => '',
                         'lists' => ''
                     ],
                     'icon' => self::getIcon(),
                     'content' => [],
-                    'default' => '/plugins/favorites/front/favorites.php'
+                    'page' => null,
+                    'default' => null
                 ]
             ];
             if (self::canCreate()) {
@@ -144,7 +97,6 @@ class Favorite extends CommonDBTM
             }
 
             $content = [];
-            $content['settings'] = self::getMenuContent();
             if (!empty($collection)) {
                 foreach ($collection as $key => $val) {
                     $content[strtolower($key)] = $val;
@@ -163,7 +115,7 @@ class Favorite extends CommonDBTM
     /**
      * @return array
      */
-    public static function getDropDown()
+    public function getDropDown()
     {
         $list = [];
 
@@ -192,5 +144,28 @@ class Favorite extends CommonDBTM
         echo "</table>";
         Html::closeForm();
         echo "</div>";
+    }
+
+    /**
+     * @return array
+     */
+    function rawSearchOptions()
+    {
+        $tab = [];
+
+        $tab[] = [
+            'id' => 'common',
+            'name' => self::getTypeName(2)
+        ];
+
+        $tab[] = [
+            'id' => '1',
+            'table' => $this->getTable(),
+            'field' => 'type',
+            'name' => __('type'),
+            'datatype' => 'dropdown'
+        ];
+
+        return $tab;
     }
 }
