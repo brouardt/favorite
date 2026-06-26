@@ -43,8 +43,8 @@
                     <div class="d-flex flex-row flex-wrap flex-xl-nowrap">
                         <div class="row flex-row align-items-start flex-grow-1">
                             <div class="row flex-row">
-                                {% if id is not empty %}
-                                    <input type="hidden" name="id" value="{{ preference['id'] }}"/>
+                                {% if preference.id is not empty %}
+                                    <input type="hidden" name="id" value="{{ preference.id }}"/>
                                 {% endif %}
 
                                 {{ fields.dropdownArrayField(
@@ -53,7 +53,7 @@
                                     menus,
                                     __('Displayed menus', 'favorites'),
                                     {
-                                        values: types,
+                                        values: preference.types,
                                         multiple: 1
                                     }
                                 ) }}

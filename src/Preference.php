@@ -76,13 +76,13 @@ class Preference extends CommonDBTM
     {
         $preference = Preference::getPreferences();
 
-        if (is_null($preference)) {
-            $preference['id'] = '';
-            $preference['users_id'] = '';
-            $preference['types'] = '[]';
-            $mode = 'add';
-        } else {
+        if ($preference) {
+            $preference['types'] = json_decode($preference['types']);
             $mode = 'update';
+        } else {
+            $preference['id'] = '';
+            $preference['types'] = [];
+            $mode = 'add';
         }
         /*$can_edit = ($preference['users_id'] == Session::getLoginUserID());
         if (!$can_edit) {
@@ -109,7 +109,6 @@ class Preference extends CommonDBTM
             'action' => Toolbox::getItemTypeFormURL(self::class),
             'preference' => $preference,
             'menus' => $list,
-            'types' => json_decode($preference['types']),
             'mode' => $mode,
             'canedit' => true /*$can_edit*/
         ]);
@@ -151,12 +150,10 @@ class Preference extends CommonDBTM
     {
         global $DB;
 
-        $result = $DB->request([
+        return $DB->request([
             'SELECT' => ['id', 'types'],
             'FROM' => 'glpi_plugin_favorites_preferences',
             'WHERE' => ['users_id' => Session::getLoginUserID()],
         ])->current();
-
-        return $result ?? null;
     }
 }

@@ -45,9 +45,6 @@ if (isset($_POST['add'])) {
     $_POST['types'] = json_encode($_POST['types']);
     $preference->check(-1, CREATE, $_POST);
     $newID = $preference->add($_POST);
-    /*if ($_SESSION['glpibackcreated']) {
-        Html::redirect($preference->getFormURL() . "?id=" . $newID);
-    }*/
     Html::back();
 } else if (isset($_POST['update'])) {
     $preference->check($_POST['id'], UPDATE);
