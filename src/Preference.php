@@ -36,17 +36,11 @@ use Glpi\Application\View\TemplateRenderer;
 use Session;
 use Toolbox;
 
-
 class Preference extends CommonDBTM
 {
-//    public static $rightname = 'plugin_favorites';
     public static $rightname = 'dropdown';
-    public $can_be_translated = true;
 
-    public static function getIndexName()
-    {
-        return 'users_id';
-    }
+    public $can_be_translated = true;
 
     public static function getTypeName($nb = 0)
     {
@@ -80,13 +74,20 @@ class Preference extends CommonDBTM
 
     public static function showPreferences()
     {
-        $preference = new Preference();
-        $preference->getFromDB(Session::getLoginUserID());
+        $preference = Preference::getPreferences();
 
-        $can_edit = ($preference->getField('users_id') == Session::getLoginUserID());
-        if (!$can_edit) {
-            return false;
+        if (is_null($preference)) {
+            $preference['id'] = '';
+            $preference['users_id'] = '';
+            $preference['types'] = '[]';
+            $mode = 'add';
+        } else {
+            $mode = 'update';
         }
+        /*$can_edit = ($preference['users_id'] == Session::getLoginUserID());
+        if (!$can_edit) {
+            return true;
+        }*/
 
         // compose multiple choice menu
         $menu = $_SESSION['glpimenu'];
@@ -106,10 +107,11 @@ class Preference extends CommonDBTM
 
         TemplateRenderer::getInstance()->display('@favorites/preference.html.twig', [
             'action' => Toolbox::getItemTypeFormURL(self::class),
-            'item' => $preference,
+            'preference' => $preference,
             'menus' => $list,
-            'types' => json_decode($preference->getField('types')),
-            'canedit' => $can_edit
+            'types' => json_decode($preference['types']),
+            'mode' => $mode,
+            'canedit' => true /*$can_edit*/
         ]);
     }
 
@@ -145,18 +147,16 @@ class Preference extends CommonDBTM
     /**
      * @return array
      */
-    public static function getFavoritesTypes()
+    public static function getPreferences()
     {
-        $preference = new Preference();
-        $preference->getFromDB(Session::getLoginUserID());
+        global $DB;
 
-        $types = $preference->getField('types');
+        $result = $DB->request([
+            'SELECT' => ['id', 'types'],
+            'FROM' => 'glpi_plugin_favorites_preferences',
+            'WHERE' => ['users_id' => Session::getLoginUserID()],
+        ])->current();
 
-        $list = [];
-        if ($types) {
-            $list = json_decode($types);
-        }
-
-        return $list;
+        return $result ?? null;
     }
 }

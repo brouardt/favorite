@@ -1,0 +1,81 @@
+<?php
+
+/**
+ * -------------------------------------------------------------------------
+ * favorites plugin for GLPI
+ * -------------------------------------------------------------------------
+ *
+ * GPLv3 License
+ *
+ * Copyright (C) 2026  Thierry Brouard
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * -------------------------------------------------------------------------
+ * @copyright Copyright (C) 2026 by the favorites plugin team.
+ * @license   GPL-3.0 https://opensource.org/license/gpl-3.0
+ * @link      https://github.com/brouardt/glpi-plugin-favorite
+ * -------------------------------------------------------------------------
+ */
+
+use GlpiPlugin\Favorites\Preference;
+use GlpiPlugin\Servicecatalog\Main;
+
+if (!isset($_GET['id'])) {
+    $_GET['id'] = '';
+}
+if (!isset($_GET['withtemplate'])) {
+    $_GET['withtemplate'] = '';
+}
+
+$preference = new Preference();
+
+if (isset($_POST['add'])) {
+    $_POST['users_id'] = Session::getLoginUserID();
+    $_POST['types'] = json_encode($_POST['types']);
+    $preference->check(-1, CREATE, $_POST);
+    $newID = $preference->add($_POST);
+    /*if ($_SESSION['glpibackcreated']) {
+        Html::redirect($preference->getFormURL() . "?id=" . $newID);
+    }*/
+    Html::back();
+} else if (isset($_POST['update'])) {
+    $preference->check($_POST['id'], UPDATE);
+    $_POST['types'] = json_encode($_POST['types']);
+    $preference->update($_POST);
+    Html::back();
+} else {
+    $preference->checkGlobal(READ);
+
+    if (Session::getCurrentInterface() == 'central') {
+        Html::header(Preference::getTypeName(2), '', 'favorites', Preference::class);
+    } else {
+        if (Plugin::isPluginActive('servicecatalog')) {
+            Main::showDefaultHeaderHelpdesk(Preference::getTypeName(2), true);
+        } else {
+            Html::helpHeader(Preference::getTypeName(2));
+        }
+    }
+    $preference->display($_GET);
+
+    if (Session::getCurrentInterface() != 'central'
+        && Plugin::isPluginActive('servicecatalog')) {
+        Main::showNavBarFooter('badges');
+    }
+
+    if (Session::getCurrentInterface() == 'central') {
+        Html::footer();
+    } else {
+        Html::helpFooter();
+    }
+}

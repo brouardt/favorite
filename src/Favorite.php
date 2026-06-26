@@ -76,31 +76,36 @@ class Favorite extends CommonDBTM
     public static function redefineMenus($menus)
     {
         if (self::canView()) {
-            $types = Preference::getFavoritesTypes();
+            $preference = Preference::getPreferences();
 
-            $favorites_menu = [PLUGIN_FAVORITES =>
-                [
-                    'title' => self::getMenuName(),
-                    'types' => $types,
-                    'icon' => self::getIcon(),
-                    'content' => [],
-                    'display' => true
-                ]
-            ];
+            if (isset($preference['types'])) {
 
-            if (!empty($types)) {
-                foreach ($types as $type) {
-                    $data = $type::getMenuContent();
-                    if (isset($data['is_multi_entries']) && $data['is_multi_entries']) {
-                        $favorites_menu[PLUGIN_FAVORITES]['content'] += $data;
-                    } else {
-                        $favorites_menu[PLUGIN_FAVORITES]['content'][strtolower($type)] = $data;
+                $types = json_decode($preference['types']);
+
+                $favorites_menu = [PLUGIN_FAVORITES =>
+                    [
+                        'title' => self::getMenuName(),
+                        'types' => $types,
+                        'icon' => self::getIcon(),
+                        'content' => [],
+                        'display' => true
+                    ]
+                ];
+
+                if (!empty($types)) {
+                    foreach ($types as $type) {
+                        $data = $type::getMenuContent();
+                        if (isset($data['is_multi_entries']) && $data['is_multi_entries']) {
+                            $favorites_menu[PLUGIN_FAVORITES]['content'] += $data;
+                        } else {
+                            $favorites_menu[PLUGIN_FAVORITES]['content'][strtolower($type)] = $data;
+                        }
                     }
                 }
-            }
 
-            // return favorites menu always in first
-            $menus = $favorites_menu + $menus;
+                // return favorites menu always in first
+                $menus = $favorites_menu + $menus;
+            }
         }
 
         return $menus;
