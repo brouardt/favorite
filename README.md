@@ -13,7 +13,7 @@ Pour installer, rendez-vous dans votre dossier plugins et tapez
 ``git clone https://github.com/brouardt/glpi-plugin-favorite.git favorite`` [entrer]
 
 #### Configuration
-Pour ajouter ou supprimer des menus en favoris il vous suffit de vous rendre dans vos préférences dans l'onglet Favoris
+Pour ajouter ou supprimer des menus en favoris il vous suffit de vous rendre dans vos préférences dans l'onglet Favoris et de sélectionner dans les menus à afficher ceux que vous préférez.
 
 ### English
 
@@ -26,4 +26,4 @@ To install, reach your plugins folder et write
 ``git clone https://github.com/brouardt/glpi-plugin-favorite.git favorite`` [enter]
 
 #### Configuration
-To add or remove menus from your favorites, simply go to your preferences and select the Favorites tab.
+To add or remove menus from your favorites, simply go to your preferences, select the "Favorites" tab, and choose the menus you prefer to display.
