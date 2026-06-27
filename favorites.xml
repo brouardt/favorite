@@ -248,4 +248,8 @@
 			<tag>收藏夾</tag>
 		</zh>
 	</tags>
+	<screenshots>
+		<screenshot>http://link/to/your/screenshot</screenshot>
+		<screenshot>http://link/to/your/screenshot</screenshot>
+	</screenshots>
 </root>
