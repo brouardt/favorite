@@ -249,7 +249,7 @@
 		</zh>
 	</tags>
 	<screenshots>
-		<screenshot>http://link/to/your/screenshot</screenshot>
-		<screenshot>http://link/to/your/screenshot</screenshot>
+		<screenshot>https://raw.githubusercontent.com/brouardt/glpi-plugin-favorites/refs/heads/main/screenshots/menus.png</screenshot>
+		<screenshot>https://raw.githubusercontent.com/brouardt/glpi-plugin-favorites/refs/heads/main/screenshots/settings.png</screenshot>
 	</screenshots>
 </root>
