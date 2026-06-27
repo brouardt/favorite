@@ -1,6 +1,6 @@
 # Favorite
 
-## Plugin favorite to GLPI / Greffon favoris pour GLPI
+## Greffon favoris pour GLPI / Plugin favorites to GLPI
 
 ### Français
 
