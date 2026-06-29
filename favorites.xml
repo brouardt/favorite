@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <root>
-	<name>Favorites</name>
-	<key>favorites</key>
+	<name>Favoris</name>
+	<key>favoris</key>
 	<state>stable</state>
 	<logo>https://raw.githubusercontent.com/brouardt/glpi-plugin-favorites/main/logo.png</logo>
 	<description>
