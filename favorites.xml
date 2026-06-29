@@ -33,6 +33,7 @@
 	<download>https://github.com/brouardt/glpi-plugin-favorites/releases</download>
 	<issues>https://github.com/brouardt/glpi-plugin-favorites/issues</issues>
 	<readme>https://github.com/brouardt/glpi-plugin-favorites/main/README.md</readme>
+	<changelog>https://github.com/brouardt/glpi-plugin-favorites/main/CHANGELOG.md</changelog>
 	<authors>
 		<author>Thierry Brouard</author>
 	</authors>
