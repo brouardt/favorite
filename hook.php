@@ -51,7 +51,7 @@ function plugin_favorites_install(): bool
         $DB->doQuery("CREATE TABLE IF NOT EXISTS `$preference_table` (
          `id` INT $default_key_sign NOT NULL,
          `types` TEXT, 
-         PRIMARY KEY `id`
+         PRIMARY KEY (`id`)
          ) ENGINE=InnoDB DEFAULT CHARSET=$default_charset COLLATE=$default_collation ROW_FORMAT=DYNAMIC;");
     }
     //execute the whole migration
