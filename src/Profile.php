@@ -89,7 +89,7 @@ class Profile extends \Profile
         $twig->display('@favorites/profile.html.twig', [
             'id' => $item->getID(),
             'profile' => $profile,
-            'title' => self::getTypeName(Session::getPluralNumber()),
+            'title' => __s('Favorites', PLUGIN_FAVORITES),
             'rights' => $rights,
         ]);
 
@@ -116,7 +116,7 @@ class Profile extends \Profile
      */
     public static function createFirstAccess($profile_id)
     {
-        self::addDefaultProfileInfos($profile_id, [PLUGIN_FAVORITES_RIGHTS => ALLSTANDARDRIGHT], true);
+        self::addDefaultProfileInfos($profile_id, [PLUGIN_FAVORITES_RIGHTS => (CREATE + READ + UPDATE + PURGE)], true);
     }
 
     /**
@@ -130,19 +130,10 @@ class Profile extends \Profile
 
         $dbu = new DbUtils();
         foreach ($rights as $right => $value) {
-            if ($dbu->countElementsInTable(
-                    'glpi_profilerights',
-                    ['profiles_id' => $profiles_id, 'name' => $right]
-                ) && $drop_existing) {
+            if ($dbu->countElementsInTable('glpi_profilerights', ['profiles_id' => $profiles_id, 'name' => $right]) && $drop_existing) {
                 $profileRight->deleteByCriteria(['profiles_id' => $profiles_id, 'name' => $right]);
             }
-            if (!$dbu->countElementsInTable(
-                'glpi_profilerights',
-                [
-                    'profiles_id' => $profiles_id,
-                    'name' => $right
-                ]
-            )) {
+            if (!$dbu->countElementsInTable('glpi_profilerights', ['profiles_id' => $profiles_id, 'name' => $right])) {
                 $myright['profiles_id'] = $profiles_id;
                 $myright['name'] = $right;
                 $myright['rights'] = $value;
@@ -166,10 +157,7 @@ class Profile extends \Profile
 
         //Add new rights in glpi_profilerights table
         foreach ($profile->getAllRights() as $data) {
-            if ($dbu->countElementsInTable(
-                    'glpi_profilerights',
-                    ['name' => $data['field']]
-                ) == 0) {
+            if ($dbu->countElementsInTable('glpi_profilerights', ['name' => $data['field']]) == 0) {
                 ProfileRight::addProfileRights([$data['field']]);
             }
         }

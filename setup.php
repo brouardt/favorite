@@ -49,16 +49,15 @@ function plugin_init_favorites(): void
     /** @var array<string, array<string, mixed>> $PLUGIN_HOOKS */
     global $PLUGIN_HOOKS;
 
+    Plugin::registerClass(Profile::class, ['addtabon' => 'Profile']);
+    $PLUGIN_HOOKS[Hooks::CHANGE_PROFILE][PLUGIN_FAVORITES] = [Profile::class, 'initProfile'];
+
     $plugin = new Plugin();
     if (Session::getLoginUserID() && $plugin->isActivated(PLUGIN_FAVORITES)) {
 
-        if (Session::haveRight(PLUGIN_FAVORITES_RIGHTS, READ)) {
-            Plugin::registerClass(Profile::class, ['addtabon' => 'Profile']);
-            Plugin::registerClass(Preference::class, ['addtabon' => 'Preference']);
-        }
 
         if (Session::haveRight(PLUGIN_FAVORITES_RIGHTS, READ)) {
-            $PLUGIN_HOOKS[Hooks::CHANGE_PROFILE][PLUGIN_FAVORITES] = [Profile::class, 'initProfile'];
+            Plugin::registerClass(Preference::class, ['addtabon' => 'Preference']);
             $PLUGIN_HOOKS[Hooks::REDEFINE_MENUS][PLUGIN_FAVORITES] = [Favorite::class, 'redefineMenus'];
         }
     }
