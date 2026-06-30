@@ -24,6 +24,12 @@ Ce plugin vous permet de gérer les favoris des menus les plus utilisés. Très 
 #### ⚙️ Configuration
 Pour ajouter ou supprimer des menus en favoris, il vous suffit de vous rendre dans vos préférences dans l'onglet Favoris et de sélectionner dans les menus à afficher ceux que vous préférez.
 
+#### 📄 Licence
+Distribué sous licence **GPL v3**. Voir [LICENCE](LICENSE.md).
+
+#### 👤 Auteur
+Développé par **brouardt**
+
 Si ce plugin vous est utile, pensez à ⭐ le dépôt !
 
 ---
@@ -41,5 +47,11 @@ This plugin lets you manage favorite for your most frequently used menus. Very u
 
 #### ⚙️ Configuration
 To add or remove menus from your favorites, simply go to your preferences, select the "Favorites" tab, and choose the menus you prefer to display.
+
+#### 📄 License
+Distributed under **GPL v3** license. See [LICENSE](LICENSE.md).
+
+#### 👤 Author
+Developed by **brouardt**
 
 If you find this plugin useful, consider ⭐ the repository!
